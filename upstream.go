@@ -13,7 +13,9 @@ import (
 type Upstream struct {
 }
 
-func (up Upstream) doWork(job int, ch chan<- string, wg *sync.WaitGroup) {
+// doWork simulate job done in a upstream service.
+// The result will be sent to the channel.
+func (up Upstream) doWork(job int, chResult chan<- string, chErr chan<- error, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	workFor := time.Duration(rand.Intn(job)) * time.Second
@@ -22,5 +24,9 @@ func (up Upstream) doWork(job int, ch chan<- string, wg *sync.WaitGroup) {
 	time.Sleep(workFor)
 	log.Printf("job %d - finshed for %v\n", job, workFor)
 
-	ch <- fmt.Sprintf("\nJob %d done", job)
+	if job%2 == 0 {
+		chErr <- fmt.Errorf("job %d failed", job)
+	} else {
+		chResult <- fmt.Sprintf("\n\tJob %d done", job)
+	}
 }
