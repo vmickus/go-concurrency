@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"math/rand"
 	"sync"
 	"time"
@@ -21,13 +20,13 @@ func (up Upstream) doWork(job int, chResult chan<- string, chErr chan<- error, w
 	// work duration
 	workFor := time.Duration(rand.Intn(TIMEOUT)) * time.Second
 
-	log.Printf("job %d - working for %v\n", job, workFor)
+	// log.Printf("job %d - working for %v\n", job, workFor)
 	time.Sleep(workFor)
-	log.Printf("job %d - finshed for %v\n", job, workFor)
+	// log.Printf("job %d - finshed for %v\n", job, workFor)
 
 	if job%2 == 0 {
 		chErr <- fmt.Errorf("job %d failed", job)
 	} else {
-		chResult <- fmt.Sprintf("\n\tJob %d done", job)
+		chResult <- fmt.Sprintf("Job %d done", job)
 	}
 }

@@ -32,9 +32,9 @@ func main() {
 	log.Println("Started timer")
 	defer timer.Stop()
 
-	// Collect response from goroutines or timeout
 	loop := true
 	results := make([]string, 0)
+	// Collect response from goroutines or timeout
 	for loop {
 		select {
 		case result, ok := <-resultChan:
@@ -45,6 +45,8 @@ func main() {
 			printGoroutines()
 			results = append(results, result)
 		case err, ok := <-errChan:
+			// Log error, but let it continue to collect other results.
+			// In this case we are fine with some upstream calls that errored
 			if !ok {
 				loop = false
 				break
@@ -59,9 +61,9 @@ func main() {
 	}
 
 	// Display work done
-	fmt.Printf("Processed %d jobs from %d\nResult: %v\n", len(results), WORKERS, results)
+	printResult(results)
 
-	//TODO Is it possible to close the goroutines after timeout?
+	// TODO Is it possible to close the goroutines after timeout?
 	printGoroutines()
 }
 
@@ -83,4 +85,11 @@ func runWorkers(upstream Worker, resultChan chan<- string, errChan chan<- error)
 
 func printGoroutines() {
 	log.Printf("Number of goroutines %d\n", runtime.NumGoroutine())
+}
+
+func printResult(results []string) {
+	fmt.Printf("Processed %d of %d:\n", len(results), WORKERS)
+	for _, result := range results {
+		fmt.Printf("\t%s\n", result)
+	}
 }
