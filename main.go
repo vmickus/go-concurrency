@@ -8,7 +8,10 @@ import (
 	"time"
 )
 
-const WORKERS = 20
+const (
+	WORKERS = 10
+	TIMEOUT = 5
+)
 
 type Worker interface {
 	doWork(int, chan<- string, chan<- error, *sync.WaitGroup)
@@ -25,7 +28,7 @@ func main() {
 	go runWorkers(up, resultChan, errChan)
 
 	// Initialize timer
-	timer := time.NewTimer(10 * time.Second)
+	timer := time.NewTimer(TIMEOUT * time.Second)
 	log.Println("Started timer")
 	defer timer.Stop()
 

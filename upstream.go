@@ -18,7 +18,8 @@ type Upstream struct {
 func (up Upstream) doWork(job int, chResult chan<- string, chErr chan<- error, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	workFor := time.Duration(rand.Intn(job)) * time.Second
+	// work duration
+	workFor := time.Duration(rand.Intn(TIMEOUT)) * time.Second
 
 	log.Printf("job %d - working for %v\n", job, workFor)
 	time.Sleep(workFor)

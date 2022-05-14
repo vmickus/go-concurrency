@@ -15,3 +15,9 @@ We need:
 ```shell
 go run ./...
 ```
+
+## Test
+
+```shell
+go test -v ./...
+```
