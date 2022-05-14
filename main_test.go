@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -16,20 +15,15 @@ func TestRunWorker(t *testing.T) {
 	counter := 0
 	for i := 0; i < WORKERS; i++ {
 		select {
-		case result := <-chResult:
-			if result == "" {
-				t.Failed()
-			}
+		case <-chResult:
 			counter++
 		case <-chErr:
 			counter++
 		}
 	}
 
-	fmt.Println(counter)
-	if counter != (WORKERS - 1) {
-		t.Failed()
+	// This test make sense? It seems to me that when it reaches here it will always have counter == WORKERS
+	if counter != WORKERS {
+		t.Errorf("test failed")
 	}
-	t.Failed()
-
 }
